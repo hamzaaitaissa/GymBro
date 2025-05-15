@@ -1,4 +1,4 @@
-import {  Home, ChartArea, Settings, InfoIcon, Dumbbell, BubblesIcon, MessageSquareIcon, MessageCircle } from "lucide-react"
+import {  Home, Settings, InfoIcon, Dumbbell,  MessageCircle, LogInIcon, UserCheck } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -44,7 +44,18 @@ const items = [
     icon: InfoIcon,
   },
 ]
-
+const itemsAccount = [
+  {
+    title: "Sign In",
+    url: "/signin",
+    icon: LogInIcon,
+  },
+  {
+    title: "Sign Up",
+    url: "/signup",
+    icon: UserCheck,
+  },
+]
 export function AppSidebar() {
   return (
     <Sidebar>
@@ -63,6 +74,23 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {itemsAccount.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

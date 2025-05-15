@@ -89,7 +89,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="font-mono text-lg font-medium mb-4">Skills & Expertise</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {["Next.js", "TypeScript", ".NET Core", "C#", "ASP.NET Core", "AI Integration", "UI/UX Design", "Docker" , "Git"].map((skill) => (
+                  {["Next.js", "TypeScript", ".NET Core", "C#", "ASP.NET Core", "API", "UI/UX Design", "Docker" , "Git"].map((skill) => (
                     <div key={skill} className="flex items-center rounded-md border border-neutral-800 px-3 py-2 hover:border-green-500/50 hover:shadow-lg">
                       <Code className="mr-2 h-4 w-4 text-green-500" />
                       <span>{skill}</span>
