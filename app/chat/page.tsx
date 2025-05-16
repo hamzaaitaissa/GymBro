@@ -59,6 +59,11 @@ export default function ChatPage() {
 
   return (
     <section className="flex h-[calc(100vh-2rem)] flex-col p-4">
+      {/* Simple gradient background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden bg-neutral-950">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-900/30 via-neutral-900 to-blue-900/30" />
+      </div>
       <div className="mb-4 flex items-center">
         <h1 className="font-mono text-2xl font-bold">GymBro AI Coach</h1>
         <div className="ml-2 rounded-full bg-green-500 px-2 py-0.5 text-xs font-medium text-white">BETA</div>
