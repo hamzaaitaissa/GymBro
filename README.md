@@ -21,6 +21,33 @@
 - **🔄 Real-time Feedback** - Instant form correction and technique guidance
 - **📊 Smart Analysis** - Advanced analytics to track performance and identify patterns
 - **🏋️ Custom Workouts** - AI-generated workout plans tailored to your fitness level and goals
+---
+
+## 📸 Screenshots
+
+<div align="center">
+
+### 🏠 Home Page
+![Home Page](docs/images/home-page.png)
+
+### 🤖 AI Chat Interface  
+![AI Chat Interface](docs/images/ai-chat.png)
+
+### 👤 About Developer
+![About Developer](docs/images/about-developer.png)
+
+### ➕ Sign Up
+![Sign Up](docs/images/signup.png)
+
+### 🚪 Sign In
+![Sign In](docs/images/signin.png)
+
+### 👤 Profile
+![Profile](docs/images/profile.png)
+
+</div>
+
+---
 
 ## 📸 Screenshots
 
