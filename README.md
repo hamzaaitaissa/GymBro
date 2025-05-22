@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://via.placeholder.com/200x200?text=GymBro+Logo" alt="GymBro Logo" width="200"/>
+  
   
   # GymBro - AI Fitness Coach
   
