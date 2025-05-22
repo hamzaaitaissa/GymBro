@@ -184,4 +184,4 @@ The backend repository will include:
 - AI service integration
 - Comprehensive testing
 
-**Backend Repository**: [GymBro Backend API](https://github.com/yourusername/gymbro-backend)
+**Backend Repository**: [GymBro Backend API]([https://github.com/yourusername/gymbro-backend](https://github.com/hamzaaitaissa/GymBro_Backend-API))
