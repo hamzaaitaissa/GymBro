@@ -25,36 +25,55 @@
 ## 📸 Screenshots
 
 <div align="center">
-  <details>
-    <summary>🏠 Home Page</summary>
-    ![image](https://github.com/user-attachments/assets/873f8449-ddca-4cdc-be37-64f72ece4548)
 
-  </details>
-  
-  <details>
-    <summary>🤖 AI Chat Interface</summary>
-   ![image](https://github.com/user-attachments/assets/838485d4-6e3d-4466-a5c0-f92b246c4baa)
-  </details>
-  
-  <details>
-    <summary>👤 About Developer</summary>
-    ![image](https://github.com/user-attachments/assets/6e25a955-cd91-468c-b341-4e90b2505408)
-  </details>
-  
-   <details>
-    <summary>➕ Sign up</summary>
-    ![image](https://github.com/user-attachments/assets/1e103223-ea7d-4ef0-aef6-e7317f30a204)
-  </details>
+### 🏠 Home Page
+<details>
+<summary>Click to view Home Page</summary>
 
-   <details>
-    <summary>🚪 Sign in</summary>
-   ![image](https://github.com/user-attachments/assets/90e1f253-5791-498e-8f17-7522204270f6)
-  </details>
+![Home Page](https://github.com/user-attachments/assets/873f8449-ddca-4cdc-be37-64f72ece4548)
 
-   <details>
-    <summary>👤 Profile</summary>
-   ![image](https://github.com/user-attachments/assets/45172fbd-d713-4282-872f-681da5df3e39)
-  </details>
+</details>
+
+### 🤖 AI Chat Interface  
+<details>
+<summary>Click to view AI Chat Interface</summary>
+
+![AI Chat Interface](https://github.com/user-attachments/assets/838485d4-6e3d-4466-a5c0-f92b246c4baa)
+
+</details>
+
+### 👤 About Developer
+<details>
+<summary>Click to view About Developer Page</summary>
+
+![About Developer](https://github.com/user-attachments/assets/6e25a955-cd91-468c-b341-4e90b2505408)
+
+</details>
+
+### ➕ Sign Up
+<details>
+<summary>Click to view Sign Up Page</summary>
+
+![Sign Up](https://github.com/user-attachments/assets/1e103223-ea7d-4ef0-aef6-e7317f30a204)
+
+</details>
+
+### 🚪 Sign In
+<details>
+<summary>Click to view Sign In Page</summary>
+
+![Sign In](https://github.com/user-attachments/assets/90e1f253-5791-498e-8f17-7522204270f6)
+
+</details>
+
+### 👤 Profile
+<details>
+<summary>Click to view Profile Page</summary>
+
+![Profile](https://github.com/user-attachments/assets/45172fbd-d713-4282-872f-681da5df3e39)
+
+</details>
+
 </div>
 
 ## 🔗 API Integration
@@ -89,29 +108,29 @@ POST /api/workouts/generate
 
 \`\`\`
 gymbro-frontend/
-├── 📁 app/                    # Next.js App Router
-│   ├── 📁 (auth)/            # Authentication routes
-│   │   ├── signin/           # Sign in page
-│   │   └── signup/           # Sign up page
-│   ├── 📁 about/             # About developer page
-│   ├── 📁 chat/              # AI coach chat interface
-│   ├── 📁 profile/           # User profile management
-│   ├── 📁 fonts/             # Local font files
-│   ├── globals.css           # Global styles
-│   ├── layout.tsx            # Root layout
-│   └── page.tsx              # Home page
-├── 📁 components/            # Reusable components
-│   ├── 📁 ui/                # shadcn/ui components
-│   ├── app-sidebar.tsx       # Application sidebar
-│   ├── auth-provider.tsx     # Authentication context
-│   ├── hero-section.tsx      # Landing page hero
-│   └── features-section.tsx  # Features showcase
-├── 📁 lib/                   # Utility functions
-│   └── utils.ts              # Common utilities
-├── 📁 public/                # Static assets
-├── next.config.js            # Next.js configuration
-├── tailwind.config.ts        # Tailwind CSS config
-└── tsconfig.json             # TypeScript config
+├── 📁 app/                    
+│   ├── 📁 (auth)/           
+│   │   ├── signin/           
+│   │   └── signup/           
+│   ├── 📁 about/             
+│   ├── 📁 chat/              
+│   ├── 📁 profile/          
+│   ├── 📁 fonts/             
+│   ├── globals.css           
+│   ├── layout.tsx            
+│   └── page.tsx              
+├── 📁 components/           
+│   ├── 📁 ui/                
+│   ├── app-sidebar.tsx       
+│   ├── auth-provider.tsx     
+│   ├── hero-section.tsx      
+│   └── features-section.tsx  
+├── 📁 lib/
+│   └── utils.ts              
+├── 📁 public/                
+├── next.config.js            
+├── tailwind.config.ts        
+└── tsconfig.json             
 \`\`\`
 
 ---
