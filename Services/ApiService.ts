@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-class ApiService {
+export class ApiService {
   private baseUrl: string;
   private token: string | null = null;
   /**

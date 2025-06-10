@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import type React from "react"
@@ -11,20 +12,28 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Dumbbell } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { apiService } from "@/Services/api"
 
 export default function SignUpPage() {
-  const [name, setName] = useState("")
+  const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
 
+  type User = {
+    fullName: string
+    email: string
+    password: string
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
     setError("")
 
-    if (!name || !email || !password) {
+    if (!fullName || !email || !password) {
       setError("Please fill in all fields")
       return
     }
@@ -38,13 +47,19 @@ export default function SignUpPage() {
       setIsLoading(true)
 
       
-      // for testing purposes im mocking a successful signup
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      
+      const signUpResponse = await apiService.post<User>("api/Auth/signup", {
+        fullName,
+        email,
+        password,
+      })
+      console.log("Account created successfully:", signUpResponse)
 
       // Redirect to the chat page after successful signup
       router.push("/signin")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
+      console.error("Signup error:", err)
       setError("Failed to create account. Please try again.")
     } finally {
       setIsLoading(false)
@@ -74,8 +89,8 @@ export default function SignUpPage() {
               <Input
                 id="name"
                 placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 className="border-neutral-700 bg-neutral-800 font-sans"
                 required
               />
