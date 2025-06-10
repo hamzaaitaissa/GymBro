@@ -42,7 +42,7 @@ export default function SignUpPage() {
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
       // Redirect to the chat page after successful signup
-      router.push("/chat")
+      router.push("/signin")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Failed to create account. Please try again.")
