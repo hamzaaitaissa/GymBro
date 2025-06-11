@@ -45,17 +45,15 @@ export default function SignUpPage() {
 
     try {
       setIsLoading(true)
-
       
-      
-      const signUpResponse = await apiService.post<User>("api/Auth/signup", {
+      const signUpResponse = await apiService.post<User>("/api/Auth/signup", {
         fullName,
         email,
         password,
       })
       console.log("Account created successfully:", signUpResponse)
 
-      // Redirect to the chat page after successful signup
+      
       router.push("/signin")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {

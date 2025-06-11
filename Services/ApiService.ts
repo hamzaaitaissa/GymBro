@@ -7,7 +7,7 @@ export class ApiService {
    */
   constructor() {
     //ASP.NET Core API
-    this.baseUrl = "http://localhost:5208/";
+    this.baseUrl = "https://localhost:7082";
   }
 
   setToken(token: string | null) {
