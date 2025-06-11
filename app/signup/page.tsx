@@ -58,7 +58,7 @@ export default function SignUpPage() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       console.error("Signup error:", err)
-      setError("Failed to create account. Please try again.")
+      setError( err instanceof Error ? err.message : "An unexpected error occurred")
     } finally {
       setIsLoading(false)
     }
