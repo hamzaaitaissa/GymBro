@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import AuthProvider from "./Auth/AuthContext";
 
 // Use local fonts as provided in your original layout
 const geistSans = localFont({
@@ -35,7 +36,9 @@ export default function RootLayout({
           <AppSidebar />
           <main className="w-full h-screen overflow-auto">
             <SidebarTrigger />
+            <AuthProvider>
             {children}
+            </AuthProvider>
           </main>
         </SidebarProvider>
       </body>

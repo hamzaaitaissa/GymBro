@@ -1,8 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"; 
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode } from "react";
 
-const AuthContext = React.createContext({
+interface AuthContextType {
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: unknown;
+  login: (userToken: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = React.createContext<AuthContextType>({
   token: null,
   isAuthenticated: false,
   isLoading: false,
@@ -11,19 +21,33 @@ const AuthContext = React.createContext({
   logout: () => {},
 });
 
-const AuthProvider = ({children}) => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
-  const [error, setError] = useState(null);
-  const [isLoading, setLoading] = useState(false);
 
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  const [error, setError] = useState<unknown>(null);
+  const [isLoading, setLoading] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+      setIsAuthenticated(!!storedToken);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+      setIsInitialized(true)
+    }
+  }, []);
   useEffect(() => {
     setIsAuthenticated(!!token);
   }, [token]);
 
   const login = (userToken:string) => {
     setLoading(true);
-    setError("");
+    setError(null);
     try {
       localStorage.setItem("token", userToken);
       setToken(userToken);
