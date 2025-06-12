@@ -32,15 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistMono.variable} font-sans antialiased dark`}>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full h-screen overflow-auto">
-            <SidebarTrigger />
-            <AuthProvider>
-            {children}
-            </AuthProvider>
-          </main>
-        </SidebarProvider>
+        <AuthProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <main className="w-full h-screen overflow-auto">
+              <SidebarTrigger />
+              {children}
+            </main>
+          </SidebarProvider>
+        </AuthProvider>
       </body>
     </html>
   );
