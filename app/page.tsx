@@ -1,3 +1,4 @@
+"use client"
 import { FeaturesSection } from "@/components/features-section";
 import { HeroSection } from "@/components/hero-section";
 import AuthProvider from "./Auth/AuthContext";
