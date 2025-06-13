@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "next/navigation"
 import { Camera, LogOut, Save, User } from "lucide-react"
+import { useAuth } from "../Auth/AuthContext"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -21,6 +22,7 @@ export default function ProfilePage() {
     name: "John Doe",
     email: "john.doe@example.com",
   })
+  const {token, logout} = useAuth()
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,10 +43,11 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     setIsLoading(true)
-
-    // Simulate logout
+    setSuccessMessage("logging out... ")
+    logout()
     setTimeout(() => {
-      // In a real app, you would clear auth tokens/cookies here
+      setIsLoading(false)
+      setSuccessMessage("You have been logged out")
       router.push("/signin")
     }, 500)
   }
