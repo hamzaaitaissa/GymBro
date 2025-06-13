@@ -1,4 +1,6 @@
-import {  Home, Settings, InfoIcon, Dumbbell,  MessageCircle, LogInIcon, UserCheck } from "lucide-react"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client"
+import {  Home, Settings, InfoIcon, Dumbbell,  MessageCircle, LogInIcon, UserCheck, User } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useAuth } from "@/app/Auth/AuthContext"
 
 
 // Menu items.
@@ -56,7 +59,15 @@ const itemsAccount = [
     icon: UserCheck,
   },
 ]
+const profile = [
+   {
+    title: "My Profile",
+    url: "/profile",
+    icon: User,
+  },
+]
 export function AppSidebar() {
+  const {token} = useAuth()
   return (
     <Sidebar>
       <SidebarContent>
@@ -81,16 +92,27 @@ export function AppSidebar() {
           <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {itemsAccount.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {token
+              ? profile.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              : itemsAccount.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
