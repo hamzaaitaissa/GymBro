@@ -29,9 +29,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const fontClass = `${geistSans.variable} ${geistMono.variable}`;
+  const bodyClass = `${fontClass} font-sans antialiased dark`;
   return (
     <html lang="en">
-      <body className={`${geistMono.variable} font-sans antialiased dark`}>
+      <body className={`${bodyClass}`}>
         <AuthProvider>
           <SidebarProvider>
             <AppSidebar />
