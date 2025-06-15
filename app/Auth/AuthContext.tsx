@@ -8,6 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: unknown;
+  connectedUser?: string | null;
   login: (userToken: string) => void;
   logout: () => void;
 }
@@ -17,6 +18,7 @@ const AuthContext = React.createContext<AuthContextType>({
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  connectedUser: null,
   login: () => {},
   logout: () => {},
 });
@@ -28,10 +30,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<unknown>(null);
   const [isLoading, setLoading] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+    const [connectedUser, setConnectedUser] = useState<string | null>(null);
 
   useEffect(() => {
     try {
       const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      setConnectedUser(storedUser);
       setToken(storedToken);
       setIsAuthenticated(!!storedToken);
     } catch (error) {
@@ -79,6 +84,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     logout,
     isLoading,
+    connectedUser,
     error,
   }),[token, isAuthenticated, isLoading, error])
   return (
