@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Send, Bot, User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "../Auth/AuthContext";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
+import { Router } from "next/router";
 
 type Message = {
   role: "user" | "assistant";
@@ -18,6 +18,9 @@ type Message = {
 };
 
 export default function ChatPage() {
+  const router = useRouter();
+  const { token, isAuthenticated, isInitialized } = useAuth();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -28,10 +31,6 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { token } = useAuth();
-  const router = useRouter();
-
-  console.log(token)
 
   // Sample responses for demo purposes
   const demoResponses = [
@@ -67,6 +66,19 @@ export default function ChatPage() {
     }, 1500);
   };
 
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      router.replace("/signin");
+    }
+  }, [isInitialized, isAuthenticated, router]);
+
+  if (!isInitialized) {
+    return null; 
+  }
+
+  if (!isAuthenticated) {
+    return null; 
+  }
   return (
     <section className="flex h-[calc(100vh-2rem)] flex-col p-4">
       {/* Simple gradient background */}

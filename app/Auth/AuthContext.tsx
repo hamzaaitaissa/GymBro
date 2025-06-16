@@ -9,6 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: unknown;
   connectedUser?: string | null;
+  isInitialized?: boolean;
   login: (userToken: string) => void;
   logout: () => void;
 }
@@ -85,8 +86,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     logout,
     isLoading,
     connectedUser,
+    isInitialized,
     error,
-  }),[token, isAuthenticated, isLoading, error])
+  }),[token, isAuthenticated, isLoading, connectedUser, error, isInitialized]);
   return (
     <AuthContext.Provider value={authContextValue}>
       {children}
