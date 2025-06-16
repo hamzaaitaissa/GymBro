@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { useAuth } from "../Auth/AuthContext";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
+import { apiService } from "@/Services/api";
 
 type Message = {
   role: "user" | "assistant";
@@ -19,8 +20,8 @@ type Message = {
 
 export default function ChatPage() {
   const router = useRouter();
-  const { token, isAuthenticated, isInitialized } = useAuth();
-
+  const { token, isAuthenticated, isInitialized, connectedUser } = useAuth();
+console.log(isAuthenticated)
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -45,6 +46,9 @@ export default function ChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

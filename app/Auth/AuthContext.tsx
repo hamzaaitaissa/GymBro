@@ -40,6 +40,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setConnectedUser(storedUser);
       setToken(storedToken);
       setIsAuthenticated(!!storedToken);
+      setIsInitialized(true);
     } catch (error) {
       setError(error);
     } finally {
@@ -57,6 +58,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       localStorage.setItem("token", userToken);
       setToken(userToken);
+      setIsAuthenticated(true);
+      setConnectedUser(localStorage.getItem("user"));
+      setIsInitialized(true);
     } catch (error) {
         setLoading(false)
         setError(error)
@@ -71,6 +75,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
         localStorage.removeItem("token")
         setToken(null)
+        setIsAuthenticated(false)
+        localStorage.removeItem("user")
+        setConnectedUser(null);
+        setIsInitialized(false);
     } catch (error) {
         setLoading(false)
         setError(error)
