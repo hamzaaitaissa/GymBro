@@ -10,8 +10,8 @@ import { Send, Bot, User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "../Auth/AuthContext";
 import { useRouter } from "next/navigation";
-import { Router } from "next/router";
 import { apiService } from "@/Services/api";
+import { connect } from "node:tls";
 
 type Message = {
   role: "user" | "assistant";
@@ -21,7 +21,6 @@ type Message = {
 export default function ChatPage() {
   const router = useRouter();
   const { token, isAuthenticated, isInitialized, connectedUser } = useAuth();
-console.log(isAuthenticated)
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -43,11 +42,34 @@ console.log(isAuthenticated)
   ];
 
   // Scroll to bottom of chat when messages change
+  const loadMessages = async () => {
+    try {
+      const response = await apiService.get<Message[]>("/api/Conversation/1/history")
+      
+    } catch (error) {
+      
+    }
+  }
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      router.replace("/signin");
+    }
+  }, []);
 
+  if (!isInitialized) {
+    return null; 
+  }
+
+  if (!isAuthenticated) {
+    return null; 
+  }
+  console.log("connectedUser", connectedUser);
+  console.log("isInitialized", isInitialized);
+  console.log("isAuthenticated", isAuthenticated);
 
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -70,19 +92,6 @@ console.log(isAuthenticated)
     }, 1500);
   };
 
-  useEffect(() => {
-    if (isInitialized && !isAuthenticated) {
-      router.replace("/signin");
-    }
-  }, [isInitialized, isAuthenticated, router]);
-
-  if (!isInitialized) {
-    return null; 
-  }
-
-  if (!isAuthenticated) {
-    return null; 
-  }
   return (
     <section className="flex h-[calc(100vh-2rem)] flex-col p-4">
       {/* Simple gradient background */}

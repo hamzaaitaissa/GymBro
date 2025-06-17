@@ -32,6 +32,12 @@ export default function SignInPage() {
 
   type UserToken = {
     token: string;
+    user: {
+      id: string;
+      fullName: string;
+      email: string;
+      conversations: string[];
+      createdAt: string;}
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,10 +66,11 @@ export default function SignInPage() {
       );
       console.log(SignInResponse);
       localStorage.setItem("token", SignInResponse.token);
+      localStorage.setItem("user", JSON.stringify(SignInResponse.user));
       setShowAlert(true);
       setError("");
       setTimeout(() => {
-        router.push("/chat");
+        router.replace("/chat");
       }, 2000);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
