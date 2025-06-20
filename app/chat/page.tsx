@@ -42,6 +42,7 @@ export default function ChatPage() {
   ];
 
   // Scroll to bottom of chat when messages change
+  console.log(connectedUser);
   const loadMessages = async () => {
     try {
       const response = await apiService.get<Message[]>("/api/Conversation/1/history")
@@ -58,7 +59,7 @@ export default function ChatPage() {
     if (isInitialized && !isAuthenticated) {
       router.replace("/signin");
     }
-  }, []);
+  }, );
 
   if (!isInitialized) {
     return null; 

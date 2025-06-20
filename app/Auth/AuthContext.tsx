@@ -2,6 +2,7 @@
 "use client";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ReactNode } from "react";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   token: string | null;
@@ -24,6 +25,20 @@ const AuthContext = React.createContext<AuthContextType>({
   logout: () => {},
 });
 
+const isTokenExpired = (token: string): boolean => {
+  try {
+    //to get playload
+    const decode = jwtDecode(token);
+    //curent time in seconds
+    const currentTime = Date.now() / 1000;
+
+    return !decode.exp || decode.exp > currentTime;
+  } catch (error) {
+    console.log("Invalid token", error);
+    return true;
+  }
+};
+
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
@@ -40,15 +55,24 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userItem = localStorage.getItem("user");
         const storedUser = userItem ? JSON.parse(userItem) : null;
 
-        console.log("Stored token:", !!storedToken);
-        console.log("Stored user:", storedUser);
+        if (storedToken) {
+          if (isTokenExpired(storedToken)) {
+            console.log("token expired");
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setToken(null);
+            setConnectedUser(null);
+            setIsAuthenticated(false);
+          } else {
+            setToken(storedToken);
+            setConnectedUser(storedUser);
+            setIsAuthenticated(true);
+          }
+        }else{
+          console.log("No stored token")
+        }
 
-        setToken(storedToken);
-        setConnectedUser(storedUser);
-        console.log("connectedUser:", storedUser);
-        setIsAuthenticated(!!storedToken);
-
-        console.log("Auth initialized - authenticated:", !!storedToken);
+        
       } catch (error) {
         setError(error);
         console.error("Error during initialization:", error);
@@ -61,22 +85,38 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     initializeAuth();
   }, []);
+
+  //auto check
   useEffect(() => {
-    setIsAuthenticated(!!token);
-  }, [token]);
+    if(!isAuthenticated || !token) return;
+    console.log("token check..")
+    //checkin every 60 sec
+    setTimeout(() => {
+      if(isTokenExpired(token)){
+        console.log("token expired")
+        logout()
+      }
+    }, 60*1000);
+
+  }, [token, isAuthenticated]);
 
   const login = (userToken: string) => {
     setLoading(true);
     setError(null);
-    try {
+try {
+      if (isTokenExpired(userToken)) {
+        throw new Error('Cannot login with expired token');
+      }
+
+      console.log("Logging in with valid token");
       localStorage.setItem("token", userToken);
       setToken(userToken);
       setIsAuthenticated(true);
+      
       const userItem = localStorage.getItem("user");
       const storedUser = userItem ? JSON.parse(userItem) : null;
       setConnectedUser(storedUser);
     } catch (error) {
-      setLoading(false);
       setError(error);
       console.error("Error during login:", error);
     } finally {
