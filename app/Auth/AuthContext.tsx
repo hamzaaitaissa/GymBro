@@ -27,15 +27,13 @@ const AuthContext = React.createContext<AuthContextType>({
 
 const isTokenExpired = (token: string): boolean => {
   try {
-    //to get playload
-    const decode = jwtDecode(token);
-    //curent time in seconds
+    const decode: { exp?: number } = jwtDecode(token);
     const currentTime = Date.now() / 1000;
 
-    return !decode.exp || decode.exp > currentTime;
+    return !decode.exp || decode.exp < currentTime;
   } catch (error) {
     console.log("Invalid token", error);
-    return true;
+    return true; // Assume expired if decoding fails
   }
 };
 
@@ -142,12 +140,20 @@ try {
     }
   };
 
+  const updateConnectedUser = (user: object | null) => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+    setConnectedUser(user);
+  }
+
   const authContextValue = useMemo(
     () => ({
       token,
       isAuthenticated,
       login,
       logout,
+      updateConnectedUser,
       isLoading,
       connectedUser,
       isInitialized,

@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AlertComponent from "@/components/alert";
 import { apiService } from "@/Services/api";
+import { useAuth } from "../Auth/AuthContext";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const router = useRouter();
   const [showAlert, setShowAlert] = useState(false);
+  const {login} = useAuth();
 
   type UserToken = {
     token: string;
@@ -49,10 +51,10 @@ export default function SignInPage() {
       return;
     }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
+    // if (password.length < 8) {
+    //   setError("Password must be at least 8 characters");
+    //   return;
+    // }
 
     try {
       setIsLoading(true);
@@ -65,7 +67,8 @@ export default function SignInPage() {
         }
       );
       console.log(SignInResponse);
-      localStorage.setItem("token", SignInResponse.token);
+      login(SignInResponse.token);
+      // localStorage.setItem("token", SignInResponse.token);
       localStorage.setItem("user", JSON.stringify(SignInResponse.user));
       setShowAlert(true);
       setError("");

@@ -12,10 +12,15 @@ import { useAuth } from "../Auth/AuthContext";
 import { useRouter } from "next/navigation";
 import { apiService } from "@/Services/api";
 import { connect } from "node:tls";
+import ReactMarkdown from "react-markdown";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
+};
+type GeminiResponse = {
+  assistantMessage: string;
+  conversationId: number;
 };
 
 export default function ChatPage() {
@@ -40,40 +45,87 @@ export default function ChatPage() {
     "Your progress is impressive! You've increased your squat by 15% in just 4 weeks. Let's adjust your program to keep that momentum going.",
     "For recovery after intense workouts, I recommend light mobility work, proper hydration, and ensuring you get 7-9 hours of quality sleep.",
   ];
-
+  interface ConnectedUser {
+    id: string;
+    fullName: string;
+    conversations: number[] | null;
+    createdAt: string;
+    email: string;
+    passwordHash: string;
+  }
   // Scroll to bottom of chat when messages change
-  console.log(connectedUser);
+  const getConversationId = (): number | null => {
+    if (!connectedUser) return null;
+
+    const user = connectedUser as ConnectedUser;
+    return user.conversations && user.conversations.length > 0
+      ? user.conversations[0]
+      : 0;
+  };
   const loadMessages = async () => {
     try {
-      const response = await apiService.get<Message[]>("/api/Conversation/1/history")
-      
+      const conversationId = getConversationId() ?? 0;
+      const response = await apiService.get<Message[]>(
+        `/api/Chat/conversation/${conversationId}/history`,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (response) {
+        console.log(response);
+      }
     } catch (error) {
-      
+      console.error("Error loading messages:", error);
     }
-  }
+  };
+
   useEffect(() => {
+    if (isInitialized && isAuthenticated && token && connectedUser) {
+      loadMessages();
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [isInitialized, isAuthenticated, token, connectedUser]);
 
   useEffect(() => {
     if (isInitialized && !isAuthenticated) {
       router.replace("/signin");
     }
-  }, );
+  });
 
   if (!isInitialized) {
-    return null; 
+    return null;
   }
 
   if (!isAuthenticated) {
-    return null; 
+    return null;
   }
   console.log("connectedUser", connectedUser);
   console.log("isInitialized", isInitialized);
   console.log("isAuthenticated", isAuthenticated);
 
+  const sendMessageToGemini = async (message: string) => {
+    try {
+      const conversationId = getConversationId() ?? 0;
+      const response = await apiService.post<GeminiResponse>(
+        `/api/Chat/send`,
+        {
+          message: message,
+          conversationId: conversationId,
+        },
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (response) {
+        console.log("Gemini response:", response);
+        return response;
+      }
+    } catch (error) {
+      console.log("Error sending message to Gemini:", error);
+    }
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() === "") return;
 
@@ -84,13 +136,37 @@ export default function ChatPage() {
     setIsLoading(true);
 
     // Simulate AI response
-    setTimeout(() => {
-      const randomResponse =
-        demoResponses[Math.floor(Math.random() * demoResponses.length)];
-      const aiMessage: Message = { role: "assistant", content: randomResponse };
-      setMessages((prev) => [...prev, aiMessage]);
+    try {
+      const aiReply = await sendMessageToGemini(input);
+      console.log("AI reply:", aiReply);
+
+      if (aiReply?.assistantMessage) {
+        const aiMessage: Message = {
+          role: "assistant",
+          content: aiReply.assistantMessage,
+        };
+        setMessages((prev) => [...prev, aiMessage]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "❌ No response from the AI.",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("AI error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "❌ Sorry, something went wrong with the AI.",
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -131,7 +207,9 @@ export default function ChatPage() {
                       <Bot className="h-4 w-4" />
                     )}
                   </div>
-                  <div className="flex-1">{message.content}</div>
+                  <div className="prose prose-invert max-w-none text-sm">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
