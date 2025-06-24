@@ -11,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { useAuth } from "../Auth/AuthContext";
 import { useRouter } from "next/navigation";
 import { apiService } from "@/Services/api";
-import { connect } from "node:tls";
 import ReactMarkdown from "react-markdown";
 
 type Message = {
@@ -54,17 +53,33 @@ export default function ChatPage() {
     passwordHash: string;
   }
   // Scroll to bottom of chat when messages change
-  const getConversationId = (): number | null => {
-    if (!connectedUser) return null;
+  const getConversationId = async () => {
+    // if (!connectedUser) return null;
 
-    const user = connectedUser as ConnectedUser;
-    return user.conversations && user.conversations.length > 0
-      ? user.conversations[0]
-      : 0;
+    // const user = connectedUser as ConnectedUser;
+    // return user.conversations && user.conversations.length > 0
+    //   ? user.conversations[0]
+    //   : 0;
+    try {
+      const user = connectedUser as ConnectedUser;
+      const response = await apiService.get<number>(
+        `/api/chat/Conversation/user/${user.id}`,{
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      if (response) {
+        console.log("response "+response)
+        return response;
+      }
+    } catch (error) {
+      console.error("Error fetching conversation ID:", error);
+      return null;
+    }
   };
+
   const loadMessages = async () => {
     try {
-      const conversationId = getConversationId() ?? 0;
+      const conversationId = await getConversationId() ?? 0;
       const response = await apiService.get<Message[]>(
         `/api/Chat/conversation/${conversationId}/history`,
         {
@@ -74,6 +89,7 @@ export default function ChatPage() {
       if (response) {
         console.log(response);
       }
+      setMessages(response)
     } catch (error) {
       console.error("Error loading messages:", error);
     }
@@ -105,7 +121,7 @@ export default function ChatPage() {
 
   const sendMessageToGemini = async (message: string) => {
     try {
-      const conversationId = getConversationId() ?? 0;
+      const conversationId = await getConversationId();
       const response = await apiService.post<GeminiResponse>(
         `/api/Chat/send`,
         {
