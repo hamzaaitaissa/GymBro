@@ -1,56 +1,80 @@
-"use client"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { useRouter } from "next/navigation"
-import { Camera, LogOut, Save, User } from "lucide-react"
-import { useAuth } from "../Auth/AuthContext"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+import { Camera, LogOut, Save, User } from "lucide-react";
+import { useAuth } from "../Auth/AuthContext";
 
 export default function ProfilePage() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
-
-  // Mock user data - in a real app, this would come from your auth system
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const { token, logout, connectedUser } = useAuth();
   const [userData, setUserData] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
-  })
-  const {token, logout} = useAuth()
+  });
+
+  interface ConnectedUser {
+    id: string;
+    fullName: string;
+    createdAt: string;
+    email: string;
+  }
+
+  useEffect(() => {
+    if (connectedUser) {
+      const user = connectedUser as ConnectedUser;
+      setUserData({
+        name: user.fullName,
+        email: user.email,
+      });
+    }
+  }, [connectedUser]);
+
+  console.log("userData", userData);
 
   const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setSuccessMessage("")
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccessMessage("");
 
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    setSuccessMessage("Profile updated successfully")
-    setIsLoading(false)
+    setSuccessMessage("Profile updated successfully");
+    setIsLoading(false);
 
     // Clear success message after 3 seconds
     setTimeout(() => {
-      setSuccessMessage("")
-    }, 3000)
-  }
+      setSuccessMessage("");
+    }, 3000);
+  };
 
   const handleLogout = () => {
-    setIsLoading(true)
-    setSuccessMessage("logging out... ")
-    logout()
+    setIsLoading(true);
+    setSuccessMessage("logging out... ");
+    logout();
     setTimeout(() => {
-      setIsLoading(false)
-      setSuccessMessage("You have been logged out")
-      router.push("/signin")
-    }, 500)
-  }
+      setIsLoading(false);
+      setSuccessMessage("You have been logged out");
+      router.push("/signin");
+    }, 500);
+  };
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
@@ -71,7 +95,9 @@ export default function ProfilePage() {
                   </button>
                 </div>
                 <h2 className="text-xl font-bold font-mono">{userData.name}</h2>
-                <p className="text-sm text-neutral-400 font-sans">{userData.email}</p>
+                <p className="text-sm text-neutral-400 font-sans">
+                  {userData.email}
+                </p>
 
                 <Separator className="my-4 bg-neutral-800" />
 
@@ -116,7 +142,9 @@ export default function ProfilePage() {
             <CardContent>
               <form onSubmit={handleSaveProfile} className="space-y-4">
                 {successMessage && (
-                  <div className="rounded-md bg-green-500/10 p-3 text-sm text-green-500">{successMessage}</div>
+                  <div className="rounded-md bg-green-500/10 p-3 text-sm text-green-500">
+                    {successMessage}
+                  </div>
                 )}
 
                 <div className="space-y-2">
@@ -126,7 +154,9 @@ export default function ProfilePage() {
                   <Input
                     id="name"
                     value={userData.name}
-                    onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                    onChange={(e) =>
+                      setUserData({ ...userData, name: e.target.value })
+                    }
                     className="border-neutral-700 bg-neutral-800 font-sans"
                   />
                 </div>
@@ -139,7 +169,9 @@ export default function ProfilePage() {
                     id="email"
                     type="email"
                     value={userData.email}
-                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                    onChange={(e) =>
+                      setUserData({ ...userData, email: e.target.value })
+                    }
                     className="border-neutral-700 bg-neutral-800 font-sans"
                   />
                 </div>
@@ -181,7 +213,11 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <Button type="submit" className="bg-green-500 hover:bg-green-600 font-sans" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="bg-green-500 hover:bg-green-600 font-sans"
+                  disabled={isLoading}
+                >
                   <Save className="mr-2 h-4 w-4" />
                   {isLoading ? "Saving..." : "Save Changes"}
                 </Button>
@@ -191,5 +227,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -140,12 +140,12 @@ try {
     }
   };
 
-  const updateConnectedUser = (user: object | null) => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-    setConnectedUser(user);
-  }
+  // const updateConnectedUser = (user: object | null) => {
+  //   if (user) {
+  //     localStorage.setItem("user", JSON.stringify(user));
+  //   }
+  //   setConnectedUser(user);
+  // }
 
   const authContextValue = useMemo(
     () => ({
@@ -153,7 +153,7 @@ try {
       isAuthenticated,
       login,
       logout,
-      updateConnectedUser,
+      // updateConnectedUser,
       isLoading,
       connectedUser,
       isInitialized,

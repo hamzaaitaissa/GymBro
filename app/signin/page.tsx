@@ -73,7 +73,7 @@ export default function SignInPage() {
       setShowAlert(true);
       setError("");
       setTimeout(() => {
-        router.replace("/chat");
+        window.location.replace("/chat");
       }, 2000);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -29,7 +29,7 @@ export default function ChatPage() {
     {
       role: "assistant",
       content:
-        "👋 Hi there! I'm your AI fitness coach. How can I help with your fitness journey today?",
+        "👋 Hi Champ! I'm your AI fitness coach. How can I help with your fitness journey today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -63,14 +63,12 @@ export default function ChatPage() {
     try {
       const user = connectedUser as ConnectedUser;
       const response = await apiService.get<number>(
-        `/api/chat/Conversation/user/${user.id}`,{
+        `/api/chat/Conversation/user/${user.id}`,
+        {
           Authorization: `Bearer ${token}`,
         }
       );
-      if (response) {
-        console.log("response "+response)
-        return response;
-      }
+      return response ?? null;
     } catch (error) {
       console.error("Error fetching conversation ID:", error);
       return null;
@@ -79,17 +77,20 @@ export default function ChatPage() {
 
   const loadMessages = async () => {
     try {
-      const conversationId = await getConversationId() ?? 0;
+      const conversationId = (await getConversationId()) ?? 0;
       const response = await apiService.get<Message[]>(
         `/api/Chat/conversation/${conversationId}/history`,
         {
           Authorization: `Bearer ${token}`,
         }
       );
-      if (response) {
-        console.log(response);
-      }
-      setMessages(response)
+      setMessages([
+        {
+          role: "assistant",
+          content: "👋 Hi Champ! I'm your AI fitness coach. How can I help?",
+        },
+        ...(response ?? []),
+      ]);
     } catch (error) {
       console.error("Error loading messages:", error);
     }
@@ -99,8 +100,11 @@ export default function ChatPage() {
     if (isInitialized && isAuthenticated && token && connectedUser) {
       loadMessages();
     }
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [isInitialized, isAuthenticated, token, connectedUser]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  },[messages]);
 
   useEffect(() => {
     if (isInitialized && !isAuthenticated) {
@@ -186,22 +190,24 @@ export default function ChatPage() {
   };
 
   return (
-    <section className="flex h-[calc(100vh-2rem)] flex-col p-4">
-      {/* Simple gradient background */}
+     <section className="flex h-[calc(100vh-2rem)] flex-col p-4">
+      {/* Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden bg-neutral-950">
-        {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-900/30 via-neutral-900 to-blue-900/30" />
       </div>
+
+      {/* Header */}
       <div className="mb-4 flex items-center">
-        <h1 className="font-mono text-2xl font-bold">GymBro AI Coach</h1>
+        <h1 className="font-mono text-2xl font-bold text-white">GymBro AI Coach</h1>
         <div className="ml-2 rounded-full bg-green-500 px-2 py-0.5 text-xs font-medium text-white">
           BETA
         </div>
       </div>
 
-      <Card className="flex flex-1 flex-col overflow-hidden border-neutral-800 bg-neutral-900">
+      {/* Chat Window */}
+      <Card className="flex flex-1 flex-col overflow-hidden border border-neutral-800 bg-neutral-900 shadow-lg rounded-xl">
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-4">
+          <div className="space-y-6">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -210,53 +216,57 @@ export default function ChatPage() {
                 }`}
               >
                 <div
-                  className={`flex max-w-[80%] items-start rounded-lg px-4 py-2 ${
+                  className={`group relative flex  items-start gap-3 rounded-xl px-5 py-4 text-sm transition ${
                     message.role === "user"
-                      ? "bg-green-500 text-white"
-                      : "bg-neutral-800 text-neutral-200"
+                      ? "bg-green-500 text-white max-w-[80%]"
+                      : "bg-neutral-800 text-neutral-100 max-w-[70%] line-height-7"
                   }`}
                 >
-                  <div className="mr-2 mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-black/20">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black/20">
                     {message.role === "user" ? (
                       <User className="h-4 w-4" />
                     ) : (
                       <Bot className="h-4 w-4" />
                     )}
                   </div>
-                  <div className="prose prose-invert max-w-none text-sm">
+                  <div className="prose prose-invert max-w-none text-[15px] leading-relaxed">
                     <ReactMarkdown>{message.content}</ReactMarkdown>
                   </div>
                 </div>
               </div>
             ))}
+
+            {/* Loading Typing Indicator */}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="flex max-w-[80%] items-start rounded-lg bg-neutral-800 px-4 py-2 text-neutral-200">
-                  <div className="mr-2 mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-black/20">
+                <div className="flex max-w-[80%] items-start gap-3 rounded-xl bg-neutral-800 px-5 py-4 text-neutral-200">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black/20">
                     <Bot className="h-4 w-4" />
                   </div>
                   <div className="flex items-center">
-                    <div className="mr-2">Thinking</div>
+                    <span className="mr-2">Thinking</span>
                     <div className="flex space-x-1">
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:0ms]"></div>
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:150ms]"></div>
-                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:300ms]"></div>
+                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:0ms]" />
+                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:150ms]" />
+                      <div className="h-2 w-2 animate-bounce rounded-full bg-neutral-400 [animation-delay:300ms]" />
                     </div>
                   </div>
                 </div>
               </div>
             )}
+
             <div ref={messagesEndRef} />
           </div>
         </div>
 
+        {/* Input Form */}
         <div className="border-t border-neutral-800 p-4">
           <form onSubmit={handleSubmit} className="flex space-x-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about workouts, nutrition, form..."
-              className="border-neutral-700 bg-neutral-800 text-white"
+              className="rounded-lg border border-neutral-700 bg-neutral-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
               disabled={isLoading}
             />
             <Button
