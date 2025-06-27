@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { Camera, LogOut, Save, User } from "lucide-react";
 import { useAuth } from "../Auth/AuthContext";
+import { create } from "domain";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
+    createdAt: new Date().toISOString(),
   });
 
   interface ConnectedUser {
@@ -42,6 +44,11 @@ export default function ProfilePage() {
       setUserData({
         name: user.fullName,
         email: user.email,
+        createdAt: new Intl.DateTimeFormat('en-US', {
+  year: '2-digit',
+  month: 'short',
+  day: 'numeric'
+}).format(new Date(user.createdAt)),
       });
     }
   }, [connectedUser]);
@@ -84,7 +91,7 @@ export default function ProfilePage() {
         {/* Profile Sidebar */}
         <div className="space-y-6">
           <Card className="border-neutral-800 bg-neutral-900">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex flex-col items-center">
                 <div className="relative mb-4">
                   <div className="h-24 w-24 rounded-full bg-neutral-800 flex items-center justify-center overflow-hidden">
@@ -104,7 +111,7 @@ export default function ProfilePage() {
                 <div className="w-full space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-neutral-400">Member since</span>
-                    <span>May 2023</span>
+                    <span>{userData.createdAt}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-neutral-400">Workouts</span>

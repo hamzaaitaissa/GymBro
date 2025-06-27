@@ -218,8 +218,8 @@ export default function ChatPage() {
                 <div
                   className={`group relative flex  items-start gap-3 rounded-xl px-5 py-4 text-sm transition ${
                     message.role === "user"
-                      ? "bg-green-500 text-white max-w-[80%]"
-                      : "bg-neutral-800 text-neutral-100 max-w-[70%] line-height-7"
+                      ? "bg-green-500 text-white max-w-[80%]  "
+                      : "bg-neutral-800 text-neutral-100 max-w-[100%] sm:max-w-[70%] line-height-7"
                   }`}
                 >
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black/20">
@@ -229,8 +229,8 @@ export default function ChatPage() {
                       <Bot className="h-4 w-4" />
                     )}
                   </div>
-                  <div className="prose prose-invert max-w-none text-[15px] leading-relaxed">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  <div className="prose prose-invert max-w-none text-[.9rem] sm:text-[1.1rem] leading-relaxed fade-in">
+                    <ReactMarkdown >{message.content}</ReactMarkdown>
                   </div>
                 </div>
               </div>
