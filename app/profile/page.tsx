@@ -45,7 +45,7 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
-  const { token, logout, connectedUser } = useAuth()
+  const { token, logout, connectedUser, isAuthenticated, isInitialized } = useAuth()
 
   const [userData, setUserData] = useState({
     name: "John Doe",
@@ -113,6 +113,9 @@ export default function ProfilePage() {
       setIsLoading(false)
       setTimeout(() => setSuccessMessage(""), 3000)
     }
+  }
+  const handleSavedCredentials = async (e: React.FormEvent) => {
+
   }
 
   const validateFitnessData = (): string[] => {
@@ -191,6 +194,19 @@ export default function ProfilePage() {
   const isProfileComplete = () => {
     return Object.values(fitnessData).every((value) => value !== "")
   }
+  useEffect(() => {
+      if (isInitialized && !isAuthenticated) {
+        router.replace("/signin");
+      }
+    });
+  
+    if (!isInitialized) {
+      return null;
+    }
+  
+    if (!isAuthenticated) {
+      return null;
+    }
 
   return (
     <div className="container mx-auto p-4 max-w-6xl">
@@ -354,6 +370,17 @@ export default function ProfilePage() {
                     />
                   </div>
                 </div>
+                <div className="flex flex-col sm:flex-row">
+                <Button
+                  type="button"
+                  onClick={handleSavedCredentials}
+                  className="bg-green-500 hover:bg-green-600 font-sans flex-1"
+                  disabled={isLoading}
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  {isLoading ? "Saving..." : "Save Profile"}
+                </Button>
+              </div>
               </form>
             </CardContent>
           </Card>
