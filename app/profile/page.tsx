@@ -104,6 +104,27 @@ export default function ProfilePage() {
     }
   }, [connectedUser]);
 
+  useEffect(() => {
+    const getUserInormation = async () => {
+      if (connectedUser) {
+        try {
+          const user = connectedUser as ConnectedUser;
+          console.log(user);
+          const response = await apiService.get<FitnessData>(
+            `/api/UserInformation/${user.id}`,
+            {
+              Authorization: `Bearer ${token}`,
+            }
+          );
+          setFitnessData(response);
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    };
+    getUserInormation();
+  }, [connectedUser]);
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Saving profile data:", { userData, fitnessData, passwords });
@@ -136,7 +157,7 @@ export default function ProfilePage() {
           Authorization: `Bearer ${token}`,
         }
       );
-      if(response){
+      if (response) {
         setFitnessData(response);
         return response;
       }
@@ -481,7 +502,7 @@ export default function ProfilePage() {
                       setFitnessData({ ...fitnessData, gender: value })
                     }
                   >
-                    <SelectTrigger className="border-neutral-700 bg-neutral-800">
+                    <SelectTrigger className="border-neutral-700 bg-neutral-800" style={{width:"180px"}}>
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                     <SelectContent>
@@ -511,7 +532,7 @@ export default function ProfilePage() {
                         age: Number.parseInt(e.target.value) || "",
                       })
                     }
-                    className="border-neutral-700 bg-neutral-800 font-sans"
+                    className="w-40 border-neutral-700 bg-neutral-800 font-sans"
                   />
                 </div>
 
@@ -537,7 +558,7 @@ export default function ProfilePage() {
                         heightInCm: Number.parseInt(e.target.value) || "",
                       })
                     }
-                    className="border-neutral-700 bg-neutral-800 font-sans"
+                    className="w-40 border-neutral-700 bg-neutral-800 font-sans"
                   />
                 </div>
 
@@ -611,7 +632,7 @@ export default function ProfilePage() {
                         workoutsPerWeek: Number.parseInt(e.target.value) || "",
                       })
                     }
-                    className="border-neutral-700 bg-neutral-800 font-sans"
+                    className="w-40 border-neutral-700 bg-neutral-800 font-sans"
                   />
                 </div>
               </div>
