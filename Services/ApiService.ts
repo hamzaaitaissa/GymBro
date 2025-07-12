@@ -81,12 +81,17 @@ async post<T>(
   });
 }
 
-  async put<T>(endpoint: string, data: unknown): Promise<T> {
-    return this.fetchWithErrorHandling<T>(endpoint, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
-  }
+async put<T>(
+  endpoint: string,
+  data: unknown,
+  customHeaders: Record<string, string> = {}
+): Promise<T> {
+  return this.fetchWithErrorHandling<T>(endpoint, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: customHeaders,
+  });
+}
 
   async delete<T>(endpoint: string): Promise<T> {
     return this.fetchWithErrorHandling<T>(endpoint, {

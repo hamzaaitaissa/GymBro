@@ -82,6 +82,8 @@ export default function ProfilePage() {
     confirm: "",
   });
 
+  const [isFitnessData, setIsFitnessData] = useState(false);
+
   interface ConnectedUser {
     id: string;
     fullName: string;
@@ -117,8 +119,9 @@ export default function ProfilePage() {
             }
           );
           setFitnessData(response);
+          setIsFitnessData(true);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     };
@@ -170,6 +173,41 @@ export default function ProfilePage() {
     }
   };
   const handleSavedCredentials = async (e: React.FormEvent) => {};
+
+  const handleUpdateSavedProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccessMessage("");
+    try {
+      const user = connectedUser as ConnectedUser
+      const response = await apiService.put<FitnessData>(
+        "/api/UserInformation",
+        {
+          UserId: user.id,
+          Gender: fitnessData.gender,
+          Age: fitnessData.age,
+          ActivityLevel: fitnessData.activityLevel,
+          Goal: fitnessData.goal,
+          WorkoutsPerWeek: fitnessData.workoutsPerWeek,
+          HeightInCm: fitnessData.heightInCm,
+        },
+        {
+          Authorization: `Bearer ${token}`
+        }
+      );
+      if(response){
+        setFitnessData(response)
+        setSuccessMessage("Fitness Profile updated")
+        return response
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }finally {
+      setIsLoading(false);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    }
+  };
 
   const validateFitnessData = (): string[] => {
     const errors: string[] = [];
@@ -469,7 +507,7 @@ export default function ProfilePage() {
                     disabled={isLoading}
                   >
                     <Save className="mr-2 h-4 w-4" />
-                    {isLoading ? "Saving..." : "Save Profile"}
+                    {isLoading ? "Saving..." : "Save Account Profile"}
                   </Button>
                 </div>
               </form>
@@ -502,7 +540,10 @@ export default function ProfilePage() {
                       setFitnessData({ ...fitnessData, gender: value })
                     }
                   >
-                    <SelectTrigger className="border-neutral-700 bg-neutral-800" style={{width:"180px"}}>
+                    <SelectTrigger
+                      className="border-neutral-700 bg-neutral-800"
+                      style={{ width: "180px" }}
+                    >
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                     <SelectContent>
@@ -640,16 +681,29 @@ export default function ProfilePage() {
               <Separator className="bg-neutral-800" />
 
               {/* Action Buttons */}
+
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  type="button"
-                  onClick={handleSaveProfile}
-                  className="bg-green-500 hover:bg-green-600 font-sans flex-1"
-                  disabled={isLoading}
-                >
-                  <Save className="mr-2 h-4 w-4" />
-                  {isLoading ? "Saving..." : "Save Profile"}
-                </Button>
+                {isFitnessData ? (
+                  <Button
+                    type="button"
+                    onClick={handleUpdateSavedProfile}
+                    className="bg-green-500 hover:bg-green-600 font-sans flex-1"
+                    disabled={isLoading}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    {isLoading ? "Saving..." : "Update Fitness Profile"}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={handleSaveProfile}
+                    className="bg-green-500 hover:bg-green-600 font-sans flex-1"
+                    disabled={isLoading}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    {isLoading ? "Saving..." : "Save Fitness Profile"}
+                  </Button>
+                )}
 
                 <Button
                   type="button"
