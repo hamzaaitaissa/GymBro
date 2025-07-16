@@ -43,7 +43,10 @@ import { apiService } from "@/Services/api";
 type Gender = "Male" | "Female" | "Other";
 type ActivityLevel = "Low" | "Medium" | "High";
 type Goal = "LoseWeight" | "Maintain" | "GainMuscle";
-
+type GeminiResponse = {
+  assistantMessage: string;
+  conversationId: number;
+}
 interface FitnessData {
   gender: Gender | "";
   age: number | "";
@@ -83,6 +86,7 @@ export default function ProfilePage() {
   });
 
   const [isFitnessData, setIsFitnessData] = useState(false);
+  const [message, setMessage] = useState("")
 
   interface ConnectedUser {
     id: string;
@@ -246,14 +250,22 @@ export default function ProfilePage() {
     }
 
     setIsGeneratingPlan(true);
+    setMessage(`You are a fitness coach, generate a workout plan based on the following: 
+      Gender: ${fitnessData.gender}
+      Age: ${fitnessData.age}
+      Goal: ${fitnessData.goal}
+      Activity Level: ${fitnessData.activityLevel}
+      Workouts frequesncy: ${fitnessData.workoutsPerWeek}`)
     try {
-      // Simulate AI API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setSuccessMessage(
-        "🏋️ Custom workout plan generated! Check your dashboard."
-      );
-      // In real implementation, redirect to workout plan page
-      // router.push("/workout-plan");
+      const response = await apiService.post<GeminiResponse>('/api/workoutplan',{
+        message:message
+      },{
+        Authorization: `Bearer ${token}`
+      })
+      if(response){
+        console.log("response from Gemini:", response)
+        return response
+      }
     } catch (error) {
       setSuccessMessage("Failed to generate workout plan. Please try again.");
     } finally {

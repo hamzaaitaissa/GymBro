@@ -36,14 +36,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Sample responses for demo purposes
-  const demoResponses = [
-    "Based on your goals, I'd recommend starting with a 3-day full-body workout routine. Would you like me to create a personalized plan?",
-    "Great question! For building muscle, aim for 1.6-2.2g of protein per kg of bodyweight daily. For someone your size, that's about 120-160g per day.",
-    "I analyzed your form, and I notice you're rounding your back slightly during deadlifts. Try keeping your chest up and engaging your lats before lifting.",
-    "Your progress is impressive! You've increased your squat by 15% in just 4 weeks. Let's adjust your program to keep that momentum going.",
-    "For recovery after intense workouts, I recommend light mobility work, proper hydration, and ensuring you get 7-9 hours of quality sleep.",
-  ];
+
   interface ConnectedUser {
     id: string;
     fullName: string;
@@ -54,12 +47,6 @@ export default function ChatPage() {
   }
   // Scroll to bottom of chat when messages change
   const getConversationId = async () => {
-    // if (!connectedUser) return null;
-
-    // const user = connectedUser as ConnectedUser;
-    // return user.conversations && user.conversations.length > 0
-    //   ? user.conversations[0]
-    //   : 0;
     try {
       const user = connectedUser as ConnectedUser;
       const response = await apiService.get<number>(
